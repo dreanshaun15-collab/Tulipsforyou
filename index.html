@@ -3,40 +3,24 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Pochacco hands you tulips</title>
+  <title>Pochacco with Tulips</title>
   <style>
     :root{--bg:#f6f9ff;--card:#ffffff;--accent:#ff6b9a;--muted:#6b7280}
-    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui}
     body{display:grid;place-items:center;background:linear-gradient(180deg,var(--bg),#ffffff);padding:30px}
     .stage{width:900px;max-width:95%;background:var(--card);border-radius:18px;box-shadow:0 12px 40px rgba(20,30,60,.08);padding:28px;display:grid;grid-template-columns:360px 1fr;gap:20px;align-items:center}
-    .left{display:flex;flex-direction:column;gap:12px;align-items:center}
-    .controls{display:flex;gap:10px;align-items:center}
-    input[type=text]{padding:10px 12px;border-radius:10px;border:1px solid #e6e9ef;font-size:15px;width:170px}
-    button{background:linear-gradient(90deg,var(--accent),#ff8fb2);color:white;padding:10px 14px;border-radius:12px;border:0;cursor:pointer;font-weight:600}
-    button:active{transform:translateY(1px)}
-    .hint{color:var(--muted);font-size:14px}
-
-    /* SVG area */
-    .scene{width:360px;height:360px;background:linear-gradient(180deg,#eaf5ff, #fdf7ff);border-radius:14px;display:grid;place-items:center;position:relative;overflow:hidden}
+    .left{display:flex;flex-direction:column;align-items:center}
+    .scene{width:360px;height:360px;background:linear-gradient(180deg,#eaf5ff,#fdf7ff);border-radius:14px;display:grid;place-items:center;position:relative;overflow:hidden}
     svg{width:80%;height:80%}
-
-    /* Head bob and arm offer animation */
-    .pochacco-head{transform-origin:50% 60%;transition:transform .35s cubic-bezier(.2,.9,.3,1)}
-    .pochacco-arm{transform-origin:20% 20%;transition:transform .6s cubic-bezier(.2,.9,.3,1)}
-    .offer .pochacco-arm{transform:rotate(-40deg) translateX(12px) translateY(-6px)}
-    .offer .tulips{transform:translate(90px,-8px) rotate(-8deg) scale(1.05)}
+    .pochacco-head{transform-origin:50% 60%;transition:transform .4s cubic-bezier(.4,1,.6,1)}
+    .pochacco-arm{transform-origin:20% 20%}
+    .tulips{transition:transform .6s cubic-bezier(.4,1,.6,1)}
     .offer .pochacco-head{transform:translateY(-6px) rotate(-3deg)}
-
-    /* Floating text */
-    .message{font-size:20px;font-weight:700;color:#111827;min-height:36px}
-    .subtitle{color:var(--muted);font-size:14px}
-
-    /* small responsive */
-    @media (max-width:780px){.stage{grid-template-columns:1fr;align-items:stretch}.left{order:2}.scene{order:1}}
-
-    /* confetti canvas overlay */
+    .offer .tulips{transform:translate(90px,-8px) rotate(-8deg) scale(1.05)}
+    .message{font-size:20px;font-weight:700;color:#111827;text-align:center;margin-top:16px}
+    .subtitle{color:var(--muted);font-size:14px;text-align:center}
     #confetti{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
-
+    @media (max-width:780px){.stage{grid-template-columns:1fr}.left{order:2}.scene{order:1}}
   </style>
 </head>
 <body>
@@ -44,179 +28,106 @@
     <div class="left">
       <div class="scene" id="scene">
         <canvas id="confetti"></canvas>
-        <!-- Simple Pochacco-like SVG (original, single-file) -->
-        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="false" role="img">
-          <!-- ground -->
-          <rect x="0" y="240" width="300" height="60" fill="#fff" opacity="0.3"/>
-
+        <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+          <!-- body -->
+          <ellipse cx="150" cy="200" rx="70" ry="80" fill="white" stroke="black" stroke-width="3"/>
+          <!-- head -->
+          <circle cx="150" cy="110" r="55" fill="white" stroke="black" stroke-width="3" class="pochacco-head"/>
+          <!-- ears -->
+          <path d="M95 70 Q70 30 90 10" stroke="black" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <path d="M205 70 Q230 30 210 10" stroke="black" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <!-- eyes -->
+          <circle cx="135" cy="110" r="6" fill="black"/>
+          <circle cx="165" cy="110" r="6" fill="black"/>
+          <!-- nose -->
+          <circle cx="150" cy="125" r="4" fill="black"/>
+          <!-- arm with tulips -->
+          <g class="pochacco-arm" id="arm">
+            <line x1="110" y1="170" x2="60" y2="210" stroke="black" stroke-width="8" stroke-linecap="round"/>
+          </g>
           <!-- tulips group -->
-          <g id="tulips" class="tulips" transform="translate(40,150)">
-            <g id="tulip1">
+          <g class="tulips" transform="translate(40,150)">
+            <g>
               <path d="M20 60 C18 48 30 42 32 38 C28 24 14 20 10 36 C14 46 18 52 20 60" fill="#ff6b9a"/>
               <rect x="18" y="58" width="4" height="38" rx="2" fill="#2f7a3f"/>
             </g>
-            <g id="tulip2" transform="translate(24,-6)">
+            <g transform="translate(24,-6)">
               <path d="M20 60 C18 48 30 42 32 38 C28 24 14 20 10 36 C14 46 18 52 20 60" fill="#ffb86b"/>
               <rect x="18" y="58" width="4" height="44" rx="2" fill="#2f7a3f"/>
             </g>
-            <g id="tulip3" transform="translate(48,6)">
+            <g transform="translate(48,6)">
               <path d="M20 60 C18 48 30 42 32 38 C28 24 14 20 10 36 C14 46 18 52 20 60" fill="#ff9bd6"/>
-              <rect x="18" y="58" width="4" height="36" rx="2" fill="#2f7a3f"/>
+              <rect x="18" y="58" width="4" height="42" rx="2" fill="#2f7a3f"/>
             </g>
-            <!-- ribbon -->
-            <rect x="4" y="100" width="70" height="10" rx="6" transform="rotate(8 4 100)" fill="#6b5cff"/>
-          </g>
-
-          <!-- Pochacco body -->
-          <g id="pochacco" transform="translate(100,40)">
-            <!-- body -->
-            <ellipse cx="90" cy="170" rx="62" ry="72" fill="#fff" stroke="#dedede"/>
-            <!-- head group -->
-            <g class="pochacco-head">
-              <circle cx="90" cy="88" r="56" fill="#fff" stroke="#222" stroke-width="1"/>
-              <!-- ears -->
-              <path d="M52 36 C34 12 34 0 52 8" fill="#111"/>
-              <path d="M128 36 C146 12 146 0 128 8" fill="#111"/>
-              <!-- eye patches -->
-              <ellipse cx="72" cy="86" rx="9" ry="12" fill="#111"/>
-              <ellipse cx="108" cy="86" rx="9" ry="12" fill="#111"/>
-              <!-- eyes -->
-              <circle cx="72" cy="90" r="3" fill="#fff"/>
-              <circle cx="108" cy="90" r="3" fill="#fff"/>
-              <!-- nose & smile -->
-              <circle cx="90" cy="108" r="5" fill="#111"/>
-              <path d="M82 118 Q90 126 98 118" stroke="#222" stroke-width="3" fill="none" stroke-linecap="round"/>
-            </g>
-
-            <!-- left arm (offering) -->
-            <g class="pochacco-arm" id="arm" transform="translate(30,120)">
-              <rect x="0" y="0" width="18" height="58" rx="9" fill="#fff" stroke="#e6e6e6"/>
-              <!-- small paw -->
-              <ellipse cx="9" cy="66" rx="12" ry="8" fill="#fff" stroke="#e6e6e6"/>
-            </g>
-
-            <!-- shadow under Pochacco -->
-            <ellipse cx="90" cy="236" rx="84" ry="12" fill="#000" opacity="0.04"/>
           </g>
         </svg>
       </div>
-
-      <div style="text-align:center;margin-top:6px">
-        <div class="hint">Tip: click <strong>Offer tulips</strong> or tap the dog to receive the bouquet ✨</div>
-      </div>
     </div>
-
-    <div>
-      <div style="display:flex;align-items:center;justify-content:space-between">
-        <div>
-          <div class="message" id="message">Here tulips for you <span id="namePreview">Abby</span> :)</div>
-          <div class="subtitle">A tiny interactive gift — editable name and animation.</div>
-        </div>
-        <div class="controls">
-          <input type="text" id="nameInput" value="Abby" aria-label="Recipient name" />
-          <button id="offerBtn">Offer tulips</button>
-        </div>
-      </div>
-
-      <div style="margin-top:22px;display:flex;gap:14px;align-items:center">
-        <button id="surprise">Surprise me</button>
-        <button id="downloadBtn" style="background:#111827">Download PNG</button>
-        <div style="color:var(--muted);font-size:13px">Click scene to toggle the offer.</div>
-      </div>
-
-      <hr style="margin:22px 0;border:none;border-top:1px solid #f0f2f5" />
-
-      <div style="color:var(--muted);font-size:14px;line-height:1.5">
-        This is a single-file HTML. To put it on GitHub: create a repo and add <code>index.html</code> with this content — GitHub Pages will serve it automatically from the main branch.
-      </div>
+    <div class="right">
+      <div class="message" id="message">Here tulips for you Abby :)</div>
+      <div class="subtitle">Click Pochacco to receive flowers</div>
     </div>
-
   </div>
 
-<script>
-  const scene = document.getElementById('scene');
-  const stage = document.querySelector('.stage');
-  const offerBtn = document.getElementById('offerBtn');
-  const nameInput = document.getElementById('nameInput');
-  const namePreview = document.getElementById('namePreview');
-  const downloadBtn = document.getElementById('downloadBtn');
-  const surprise = document.getElementById('surprise');
+  <script>
+    const scene = document.getElementById('scene');
+    const stage = document.querySelector('.stage');
+    const arm = document.getElementById('arm');
+    const message = document.getElementById('message');
 
-  function toggleOffer() {
-    stage.classList.toggle('offer');
-    if (stage.classList.contains('offer')) {
-      burstConfetti();
+    function offerFlowers() {
+      stage.classList.add('offer');
+      message.textContent = `Here tulips for you Abby :)`;
+      waveArm();
+      launchConfetti();
+      setTimeout(()=>stage.classList.remove('offer'),2000);
     }
-  }
 
-  scene.addEventListener('click', toggleOffer);
-  offerBtn.addEventListener('click', toggleOffer);
+    // Smooth waving arm animation
+    function waveArm(){
+      let t=0;
+      function animate(){
+        if(t>60) return; 
+        const angle = Math.sin(t/6)*25 - 20; 
+        arm.setAttribute("transform",`rotate(${angle},110,170)`);
+        t++;
+        requestAnimationFrame(animate);
+      }
+      animate();
+    }
 
-  nameInput.addEventListener('input', ()=>{
-    const v = nameInput.value.trim() || 'friend';
-    namePreview.textContent = v;
-  });
+    scene.addEventListener('click', offerFlowers);
 
-  // small surprise names
-  surprise.addEventListener('click', ()=>{
-    const samples = ['Abby','Sam','You','Friend','Jamie','Ava','Noah','Maya'];
-    const pick = samples[Math.floor(Math.random()*samples.length)];
-    nameInput.value = pick; nameInput.dispatchEvent(new Event('input'));
-    stage.classList.add('offer'); burstConfetti();
-  });
-
-  // download PNG snapshot of the scene
-  downloadBtn.addEventListener('click', async ()=>{
-    const svg = scene.querySelector('svg');
-    // clone and inline styles
-    const cloned = svg.cloneNode(true);
-    const outer = document.createElement('div'); outer.appendChild(cloned);
-    const svgData = new XMLSerializer().serializeToString(cloned);
-    const blob = new Blob([svgData], {type: 'image/svg+xml;charset=utf-8'});
-    const url = URL.createObjectURL(blob);
-    const img = new Image(); img.onload = ()=>{
-      const c = document.createElement('canvas'); c.width = 900; c.height = 900; const ctx = c.getContext('2d');
-      // white background
-      ctx.fillStyle = '#fff'; ctx.fillRect(0,0,c.width,c.height);
-      ctx.drawImage(img, 0, 0, c.width, c.height);
-      URL.revokeObjectURL(url);
-      c.toBlob(b=>{
-        const a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = 'pochacco_tulips.png'; a.click();
+    // Confetti
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    let confettiPieces = [];
+    function resize(){canvas.width=scene.clientWidth;canvas.height=scene.clientHeight;}
+    window.addEventListener('resize',resize);resize();
+    function launchConfetti(){
+      confettiPieces = Array.from({length:60},()=>({
+        x:Math.random()*canvas.width,
+        y:Math.random()*-20,
+        r:6+Math.random()*6,
+        c:`hsl(${Math.random()*360},80%,60%)`,
+        s:2+Math.random()*3,
+        a:Math.random()*2*Math.PI
+      }));
+    }
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      confettiPieces.forEach(p=>{
+        p.y+=p.s;
+        p.x+=Math.sin(p.a);
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.r,0,2*Math.PI);
+        ctx.fillStyle=p.c;
+        ctx.fill();
       });
-    };
-    img.src = url;
-  });
-
-  // tiny confetti implementation
-  const confettiCanvas = document.getElementById('confetti');
-  confettiCanvas.width = confettiCanvas.clientWidth; confettiCanvas.height = confettiCanvas.clientHeight;
-  const cx = confettiCanvas.getContext('2d');
-  let confettiPieces = [];
-  window.addEventListener('resize', ()=>{confettiCanvas.width = confettiCanvas.clientWidth; confettiCanvas.height = confettiCanvas.clientHeight});
-
-  function burstConfetti(){
-    const colors = ['#ff6b9a','#ffd166','#6bdeff','#9bd6ff','#c6f6d5','#ff9bd6'];
-    for(let i=0;i<50;i++){
-      confettiPieces.push({x:150+Math.random()*120-60,y:60+Math.random()*40-20, vx:(Math.random()-0.5)*6, vy:-Math.random()*8-2, r:Math.random()*6+3, c:colors[Math.floor(Math.random()*colors.length)], life:120});
+      requestAnimationFrame(draw);
     }
-  }
-  function tick(){
-    cx.clearRect(0,0,confettiCanvas.width,confettiCanvas.height);
-    for(let i=confettiPieces.length-1;i>=0;i--){
-      const p = confettiPieces[i];
-      p.vy += 0.25; p.x += p.vx; p.y += p.vy; p.life--;
-      cx.save(); cx.translate(p.x,p.y); cx.rotate((p.vx+p.vy)*0.05);
-      cx.fillStyle = p.c; cx.fillRect(-p.r/2,-p.r/2,p.r,p.r*0.6);
-      cx.restore();
-      if(p.life<=0) confettiPieces.splice(i,1);
-    }
-    requestAnimationFrame(tick);
-  }
-  tick();
-
-  // keyboard accessibility: Enter triggers offer
-  nameInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') toggleOffer(); });
-
-</script>
+    draw();
+  </script>
 </body>
 </html>
+
